@@ -1,3 +1,4 @@
 # Table of contents
 
-* [Page](README.md)
+* [Kioptrix](README.md)
+* [Nmap Scanning](nmap-scanning.md)
