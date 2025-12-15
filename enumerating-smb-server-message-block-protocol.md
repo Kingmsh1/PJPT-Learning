@@ -78,7 +78,7 @@ Example Output:
 
 ## Setting up SMB Client:
 
-* SMB Client attempts to connect to the file share that is out there.
+* SMB Client attempts to connect to the file share (a shared folder available over a network so other devices can access its contents) that is out there.
 * If we can connect successfully anonymously then we may be able to see the files in the network, which could be extremely useful.
 * If you don't know the credentials, just try to press enter or log in. If it works, it means the server allows anonymous access and will list shares without credentials - poor security.
 * If credentials are required, try specifying a user.
