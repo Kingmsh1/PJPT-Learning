@@ -59,9 +59,9 @@ Other Switches:
 
 Example Terminal Output:
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
-
 <figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="info" %}
 Here, ports open include 443, 22, 80 etc. We're also told the OS which is good for enumeration later.
