@@ -4,5 +4,5 @@ description: Instructions to install the vulnerable machine Kioptrix from vulnhu
 
 # Kioptrix
 
-\>**important:** vulnhub.com has vulnerable machines, like Kioptrix, that you can download and test your skills on.
+**Important:** vulnhub.com has vulnerable machines, like Kioptrix, that you can download and test your skills on.
 
