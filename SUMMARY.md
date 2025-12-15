@@ -1,4 +1,4 @@
 # Table of contents
 
-* [Kioptrix](README.md)
+* [Kioptrix](installing-kioptrix.md)
 * [Nmap Scanning](nmap-scanning.md)
