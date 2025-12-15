@@ -54,7 +54,7 @@ msf6 auxiliary(scanner/smb/smb_version) > info
 
 3.
 
-{% code title="Set the remote (i.e., target) host. " %}
+{% code title="Set the remote (i.e., target) host using RHOSTS." %}
 ```
 msf6 auxiliary(scanner/smb/smb_version) > set RHOSTS 10.0.2.4
 ```

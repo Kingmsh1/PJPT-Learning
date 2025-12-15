@@ -4,7 +4,7 @@ description: >-
   respectively)
 ---
 
-# Enumerating HTTP and HTTPS
+# Enumerating HTTP and HTTPS Protocols
 
 ## Starting Off:
 
@@ -38,7 +38,7 @@ root@kali:~# nikto -h https://10.0.2.4
 
 ## Note Taking:
 
-* As a reminder, good pentesters note down their findings.
+* As a reminder, good pentesters note down their findings. Make notes however you'd like.
 * For this vulnerability assessment, copy the output and follow the instructions below.
 
 
@@ -69,7 +69,7 @@ root@kali:~# gedit vulnerability.txt
 
 > Tool: Dirbuster
 >
-> Description: Used for directory busting whilst enumerating HTTP and HTTPS
+> Description: Used for finding available directories for a website whilst enumerating HTTP and HTTPS
 
 {% code title="Start up Dirbuster GUI" %}
 ```bash
