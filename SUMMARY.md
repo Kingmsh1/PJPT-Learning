@@ -1,4 +1,5 @@
 # Table of contents
 
-* [Kioptrix](installing-kioptrix.md)
+* [Kioptrix](README.md)
 * [Nmap Scanning](nmap-scanning.md)
+* [Enumerating HTTP and HTTPS](enumerating-http-and-https.md)
