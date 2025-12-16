@@ -4,7 +4,7 @@ description: Self-explanatory
 
 # Gaining Root With Metasploit
 
-1. Find an exploit using SearchSploit.
+1. Find an exploit using SearchSploit/Google specific features of the target you got from scanning & recon & enum (e.g., version of service running on a port).
 2. Search it in msfconsole like this: "search \[exploit name]".
 3. Select the module that matches to your target machine (using info you got from recon & scanning & enum).
 4. Set it to be the payload you want to deliver like this: "use \[exploit index number]".
