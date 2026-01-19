@@ -1,3 +1,4 @@
 # Table of contents
 
-* [AD Initial Attack Vectors](README.md)
+* [Active Directory Introduction](README.md)
+* [AD Initial Attack Vectors](ad-initial-attack-vectors.md)
