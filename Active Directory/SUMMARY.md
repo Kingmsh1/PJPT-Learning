@@ -1,3 +1,3 @@
 # Table of contents
 
-* [Active Directory Intro](README.md)
+* [Page](README.md)
