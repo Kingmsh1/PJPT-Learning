@@ -34,7 +34,7 @@ root@kali:~# sudo responder -I eth0 -dwP
 
 2. This will capture hashes, with information on the type of hash (NTLMv2 below), the domain, the username logged in and the password hash. Example:
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 3. Time to crack the hash. Store the hash in a text file and attempt to crack it using HashCat. Example:
 
@@ -59,4 +59,98 @@ LLMNR Poisoning Mitigation:
 
 
 
-*
+* This stands for Server Message Block Relay attacks.
+* SMB Relay is relaying captured hashes to specific machines to attempt to gain access, rather than cracking them. You can't relay hashes to yourself.
+* This is particularly useful if you unable to crack the hashes, perhaps due to a good victim password policy.&#x20;
+* We want SMB signing to be turned off so that hackers can impersonate users to other machines by abusing a trust relationship between the machine and the user the hacker is impersonating.&#x20;
+
+
+
+{% hint style="info" %}
+IMPORTANT PREREQUISITES: SMB signing must be disabled/unenforced on the target. Workstations tend to have this, whereas servers like the Domain Controller tend to have SMB signing enabled. Relayed user credentials must be those of an administrator to provide actual value.
+{% endhint %}
+
+
+
+Method:
+
+1. Use Nmap to identify hosts without SMB signing:
+
+{% code title="Example scan to see if the target, 10.0.2.5, has SMB signing enabled" %}
+```bash
+root@kali:~# nmap --script=smb2-security-mode.nse -p445 10.0.2.5 -Pn
+```
+{% endcode %}
+
+-> "nmap": name of the tool being used.
+
+-> "--script=smb2-security-mode.nse": name of the script being used to check for SMB signing.&#x20;
+
+-> "-p445": specifies port 445 - the SMB service port. This is used by Windows for file-sharing and AD traffic.&#x20;
+
+-> "10.0.2.5": target IP address. Can be a DC, server or workstation to scan. You can replace this with a subnet to scan as well.&#x20;
+
+-> "-Pn": forces probing the target. Useful if you can't ping to a machine you know is alive.&#x20;
+
+
+
+Example:
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+-> You want "Message signing enabled but not required"
+
+
+
+2. Turn SMB and HTTP off to ensure hashes are being relayed. This relays it to another machine - the attack doesn't just stop at capturing the hash - to help the attacker act as the victim on another machine.
+
+{% code title="Configure this Responder configuration file and turn SMB and HTTP "Off"" overflow="wrap" %}
+```bash
+root@kali:~# sudo mousepad /etc/responder/responder.conf
+```
+{% endcode %}
+
+3. Run responder with the same code you used to capture the hashes for LLMNR poisoning.&#x20;
+4. Use NTLM relay. Example:
+
+{% code title="Running NTLM Relay against a list of target IPs which have SMB signing off " %}
+```shellscript
+root@kali:~# ntlmrelayx.py -tf targetfile.txt -smb2support 
+```
+{% endcode %}
+
+-> "ntlmrelayx.py": the Python script for NTLM relay execution.
+
+-> "-tf": the "target file" switch specifying the text file containing a list of IP addresses for machines to attack with SMB signing turned off.&#x20;
+
+-> "-smb2support": tells NTLM Relay to use SMB2 instead of SMB1, which is most likely disabled on modern Windows systems. This helps for successful authentication to modern Windows hosts.&#x20;
+
+
+
+SMB Relay Mitigation:
+
+1. Enable SMB signing on all devices to stop the attack. But, this can reduce performance with file management.
+2. Disable NTLM authentication to completely stop the attack. But, this might stop Kerberos - our main method of authentication on Active Directory - from working meaning Windows will just default back to NTLM making the attack possible again.&#x20;
+3. Account tiering to limit domain admins to specific tasks. But, this policy can be difficult to enforce.
+4. Local administrator restriction to prevent a lot of attacks because SMB relay is only really effective for admin accounts&#x20;
+
+
+
+***
+
+## Gaining Shell Access:
+
+* You can gain shells through Metasploit, psexec.py etc.
+* Can help find sensitive files and information.
+
+
+
+Method:
+
+1. Start Metasploit Framework on Kali Linux and search for "psexec". Look for "exploit/windows/smb/psexec" or something along those lines.&#x20;
+2. Use it and set the payload to "windows/x64/meterpreter/reverse\_tcp". You could also replace x64 with x32 depending on the architecture of the target machine.&#x20;
+3. Set RHOST to the IP of the target machine.&#x20;
+4. Set SMB domain to the Active Directory domain name.
+5. Set the SMB user to the user on the target machine.
+6. Set the SMB password for the user on the machine.&#x20;
+7. Run the command.&#x20;
