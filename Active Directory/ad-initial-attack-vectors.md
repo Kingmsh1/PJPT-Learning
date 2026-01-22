@@ -236,3 +236,23 @@ root@kali:~# ntlmrelayx.py -6 -t ldaps://[Domain Controller IP] -wh fakewpad.[AD
 -> "-wh": sets up a fake WPAD host. Tells the tool to pretend to be a WPAD server for this domain name so when a Windows machine looks for WPAD, it receives a response from the attacker saying they are WPAD for Windows to automatically connect and initiate communication and trust the response. It then sends NTLM authentication automatically. From here, the authentication is relayed by the attacker to the DC over LDAPS.
 
 -> "-l loot": folder to store anything ntlmrelayx extracts is stored here.&#x20;
+
+
+
+2. Run MITM 6. The store of the data will be in the folder you made. Use the code below:
+
+```bash
+root@kali:~# mitm6 -d [domain].local
+```
+
+{% hint style="info" %}
+Research where to go from here to complete the attack.
+{% endhint %}
+
+
+
+IPv6 Attack Mitigation:
+
+1. Disable DHCPv6 (DHCP for IPv6) traffic and incoming router requests. Don't block IPv6 across the network entirely, which could have unwanted side-affects.&#x20;
+2. If WPAD is not in use internally, just disable it.
+3. Put Administrative users in the protected users group/make them sensitive to prevent impersonation and delegation.
