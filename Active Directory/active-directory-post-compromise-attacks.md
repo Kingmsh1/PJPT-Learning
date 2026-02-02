@@ -292,3 +292,28 @@ root@kali:~# hashcat -m 13100 hash.txt /usr/share/wordlists/rockyou.txt
 
 
 
+Mitigation:
+
+1. Strong passwords: can help prevent cracking.
+2. Least privilege possible assigned to accounts. E.g., service accounts should not be domain admin accounts. You can give it permissions to do what it needs to do without making it domain admin.
+
+
+
+***
+
+## Token Impersonation:
+
+* Tokens are temporary keys that allow someone to access a system/network without having to provide credentials every time you access a file. it is created when a user logs into a system and represents their identity & permissions. Every process the user launches inherits a copy of that token.&#x20;
+* This means, for example, if a Domain Admin logs in and runs multiple processes, each of their processes contains a DA token. If you steal one of those processes, you can steal/impersonate that token and pretend to be them.&#x20;
+* Delegate Tokens: tokens created for logging into a machine or using remote desktop. If a user is logged in, they'll have delegation tokens.
+* Impersonate Tokens: "non-interactive" tokens, like a domain logon script.&#x20;
+* Token Impersonation is essentially an attacker pretending to be a user with valid tokens, impersonating them, to make Windows believe they are that user.&#x20;
+* For this attack, you can use Meterpreter, which is a shell that runs on a compromised Windows machine, helping for post-exploitation.&#x20;
+
+
+
+Method:
+
+1. You can use Metasploit in Kali Linux. Search for and use the payload of "psexec". Set all the details (e.g., username, password of compromised account etc.).
+2. Run "options" and Set the payload.s
+
