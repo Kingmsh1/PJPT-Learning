@@ -4,7 +4,7 @@ description: Exploring further steps post-domain-compromise
 
 # Post-Domain-Compromise
 
-Post-Compromise Recommended Steps:
+## Post-Compromise Recommended Steps:
 
 1. Go back and try to find different attack paths to compromise the domain. This is key so that all possible routes can be patched.
 2. Dump the NTDS.dit and crack passwords.
