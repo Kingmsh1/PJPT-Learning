@@ -52,7 +52,7 @@ root@kali:~# assetfinder --subs-only website.com
 
 
 
-```
+```bash
 #!/bin/bash
 
 url=$1 
@@ -116,7 +116,7 @@ root@kali:~# amass enum -d [website].com
 
 2. Modify our script from before to add in an Amass scan if you want to:
 
-```
+```bash
 #!/bin/bash
 
 url=$1 
@@ -184,7 +184,7 @@ root@kali:~# cat [website].com/recon/final.txt | httprobe -s -p https:443
 
 3. Modify the above script again:
 
-```
+```bash
 #!/bin/bash
 
 url=$1 
