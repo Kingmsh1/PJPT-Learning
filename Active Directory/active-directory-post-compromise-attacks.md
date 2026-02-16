@@ -345,6 +345,14 @@ root@kali:~# john -w=[Path to Wordlist] hashes.txt
 
 This is one possible attack vector, to find credentials for one account (with pre-auth disabled). From here, you could perform lateral movement. 
 
+Mitigation:
+
+1.	Enable pre-auth 
+2.	Use strong passwords
+3.	Use stronger encryption
+4.	Monitor DC Security Logs, which will have info on TGT requests (e.g., Pre-auth type being 0 signalling disabled pre-auth, service name being krbtgt, event ID 4768)
+
+
 ***
 
 ## Token Impersonation:
