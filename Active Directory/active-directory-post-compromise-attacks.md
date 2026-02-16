@@ -188,9 +188,12 @@ Administrator:500:aad3b435b51404eeaad3b435b51404ee:5f4dcc3b5aa765d61d8327deb882c
 
 * The format of this hash is as follows: username:RID:LM Hash: NT Hash:::
 
-Username: Administrator\
-RID: 500\
-LM Hash: aad3b435b51404eeaad3b435b51404ee (mostly irrelevant - not useful)\
+Username: Administrator
+\
+RID: 500
+\
+LM Hash: aad3b435b51404eeaad3b435b51404ee (mostly irrelevant - not useful)
+\
 NT Hash: 5f4dcc3b5aa765d61d8327deb882cf99 (called NTLM/NT Hash - very useful. In NTLM, the hash is the credential. This is what you could crack if you wanted to).
 
 
