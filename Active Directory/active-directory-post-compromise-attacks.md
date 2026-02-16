@@ -300,7 +300,50 @@ Mitigation:
 1. Strong passwords: can help prevent cracking.
 2. Least privilege possible assigned to accounts. E.g., service accounts should not be domain admin accounts. You can give it permissions to do what it needs to do without making it domain admin.
 
+***
 
+## ASREP Roasting:
+
+* This is exploiting user accounts in AD that don't have pre-authentication. This allows attackers to extract hashed credentials (+ crack), pretending to be that user.
+* Pre-authentication forces users to first prove their identity before the KDC issues the ASREP response. If pre-auth is disabled, attackers can request ASREP responses without knowing the password.
+* It involves:
+
+1. Requesting a ticket to the KDC (Key Distribution Centre) for an account with pre-auth disabled.
+2. The KDC sending back an ASREP response, encrypted with the account's password hash.
+3. Cracking the encrypted password.
+
+Method:
+
+1. Run the GetNPUsers.py script within Impacket like this:
+
+```shellscript
+root@kali:~# impacket-GetNPUsers [domain].local/[username] -dc-ip [DC IP] -no-pass
+```
+
+-> "[username]": just the username, with pre-auth disabled, that you want to get the password hash from.
+
+-> "-no-pass": tells Impacket to not prompt the attacker for a password because the attacker is only trying to request ASREPs.
+
+2. The hash may look like this example:
+
+$krb5asrep$23$svc-admin@SPOOKYSEC.LOCAL:24ecdc664cfad5b0a81801ec58516730$3c55d8c2294c6606ee6d68def97564c303a82b243c9d52cb865070c4a2f0f837b2787b086a3849797276aaa5ea56f6cc7fe19499e625271daafcdbcbd7eb0a1fb8151075de82dc8ecbfac9c676a674f3f3355654e69e80892fa0237cd4fd80db0c79c0f9546b7715911bb7220c3d8d3c1fc68588360e6b57a0d1e3857ca4b4def8599d62e25e122a3e93d01677d8a42a608c3fc2f20e4bd6eb8b57f635e19cf94fa156579413ba7e6fd9bb01e98d7eb5cc13b5e2a2a8a9ed656d30494371b0a4e630dcf738cb0dc5fa2881597a0ea1236bddd3900f507474abc31cf87b79dd438667f90357d7051bba30000c077bd580af0f
+
+-> Crack the hash (starting after the colon). 
+
+3. You can crack the hash via John the Ripper like this:
+
+```shellscript
+root@kali:~# john -w=[Path to Wordlist] hashes.txt
+```
+
+-> Using John is helpful because it has a built-in hash-detection capability. You can specify the format in John if the hash has no identifying prefix/format is ambiguous etc.
+
+-> In the hash we find, it starts with the tag $krb5asrep$23$ so John knows it's an ASREP Roasting Hash and can crack it without the attacker specifying the type of hash
+
+-> "[hashes.txt]": the text file in the WD containing the hash we find. 
+
+
+This is one possible attack vector, to find credentials for one account (with pre-auth disabled). From here, you could perform lateral movement. 
 
 ***
 
