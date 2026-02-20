@@ -1,7 +1,8 @@
 ---
 description: >-
-  Insight into pentesting wireless networks - an assessment of wireless
-  networks.
+  Insight into pentesting wireless networks - an assessment of wireless network
+  password security. This attack will be easier if the network uses a weak
+  password.
 ---
 
 # Wireless Pentesting & Exploitation
