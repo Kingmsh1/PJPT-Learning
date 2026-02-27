@@ -1,10 +1,8 @@
 ---
-description: >-
-  Insight into post-enumeration of web vulnerabilities. Moving onto
-  exploitaiton.
+description: Insight web exploitaiton with SQL Injections.
 ---
 
-# Finding & Exploiting Common Web Vulnerabilities
+# SQLi
 
 ## Prerequisites (Lab setup):
 
