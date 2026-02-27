@@ -130,7 +130,7 @@ jeremy' or 1=1#
 4. You can automate the process of payloads using SQL Map like this:
 
 ```shellscript
-root@kali:~# cat request.txt
+root@kali:~# nano request.txt
 root@kali:~# sqlmap -r request.txt
 
 ```
@@ -139,6 +139,74 @@ root@kali:~# sqlmap -r request.txt
 
 -> The sqlmap command tests for finding SQL injections.
 
+-> "-r": tells SQL Map to load the exact HTTP request from the text file and use it as-is.&#x20;
 
 
-5. If it fails to find SQL injections, you have the option to search manually, downloading payloads for fuzzing or trying to look for other injection points.&#x20;
+
+5. If it fails to find SQL injections, you have the option to search manually, downloading payloads for fuzzing or trying to look for other injection points. Look at the information that is being processed. It's there for a reason and maybe you can exploit it.
+6. For this lab, copy the HTTP request that has the session cookie (in /labs/i0x02.php) because we know the cookie will be processed to give the "Welcome to the dashboard" because that's what shows up in the Response. Paste the request to the Burp Repeater. Also get the response section ready.&#x20;
+7. Run a SQL injection in the session cookie part by adding on:
+
+```sql
+ ' and 1=1#
+```
+
+to the end. We are successful because the Content-Length of the website stays the same, signalling we are still on the "Welcome to the dashboard" page. This signals that we can run SQL injections.&#x20;
+
+5. This doesn't get us data yet. We have to create payloads that produce True/False output. Based on this behaviour, we can extract data. E.g., "Is the password longer than 10 characters? Yes or No." etc.&#x20;
+6. We will use the SQL SUBSTR(String, num1, num2) function. This extracts a substring from String starting at position num1 and extracting num2 characters.&#x20;
+7. The payload we will add to the session cookie will be:
+
+```sql
+' and substring((select version()), 1, 1) = '7'#
+```
+
+-> We are trying to see if the version of the database starts with a '7'.
+
+-> We put select version() in brackets to let it resolve.
+
+-> A fail indicator would be the Content-Length of the website changes from the 'Welcome to the dashboard' page Content-Length. A success indicator would be we are still on that page.
+
+-> Trial and error until you get it. Versions of databases look like X.X.X.&#x20;
+
+
+
+8. Another type of payload:
+
+```sql
+' and substring((select password from injection0x02 where username='jessamy'), 1, 1) = 'b'#
+```
+
+-> Trial and error to find the password string.
+
+-> You have to automate this or it will be tediously long.&#x20;
+
+
+
+9. Use SQL Map for the attack. Grab the original request, put it in a text file and run SQL Map against it.&#x20;
+
+```shellscript
+root@kali:~# sqlmap -r req.txt --level=2
+```
+
+-> "--level=2": tests more parameters (e.g., URL, cookies etc.), uses more payloads, increases chances of finding SQLi. Can increase scanning times a little.
+
+
+
+-> Will return what seems to be exploitable. It will give us a payload to test for a vulnerable parameter.&#x20;
+
+
+
+10. Alternatively, try just dumping info from the database like this:
+
+```shellscript
+root@kali:~# sqlmap -r req2.txt --level=2 --dump 
+```
+
+-> It will only dump data if SQL Map finds at least one injectable parameter in the req2.txt file supplied (only if it confirms a working SQLi).&#x20;
+
+-> If there is no injectable parameter, it will not dump anything.&#x20;
+
+-> Using a higher level increases the chances of finding something wrong but is more aggressive.&#x20;
+
+-> Add on a "-T \<table name>" flag to specify a specific table to dump (if you don't want all the tables in the database) provided SQL Map finds a parameter that is injectable.&#x20;
