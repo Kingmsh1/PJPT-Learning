@@ -52,5 +52,6 @@ root@kali:~# chmod 600 id_rsa.
 
 5. If id_rsa (or any other type of private key) is encrypted itself, crack it with ssh2john like this:
 
-root@kali:~# ssh2john id_rsa > id_rsa.hash # converting to john format first to be able to crack it
+root@kali:~# ssh2john id_rsa > id_rsa.hash 
+# converting to john format first to be able to crack it
 root@kali:~# john id_rsa.hash --wordlist=[Path to Wordlist]
