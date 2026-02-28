@@ -11,3 +11,7 @@ FFUF General Notes:
 
 FFUF: "ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt:FUZZ -u http://10.0.2.152/FUZZ". Uses FFUF (fuzz faster u fool) in a placeholder sort-of tool that uses a wordlist and replaces the "FUZZ" part in the -u (meaning target). It checks different input and reports behaviour for you to interpret for your attack.
 
+ZIP File Cracking:
+
+1. Use fcrackzip to crack password-protected ZIP files. 
+2. When using fcrackzip, always use the "-u" flag to unzip to verify the correct password. Otherwise, fcrackzip may report false positives. 
