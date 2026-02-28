@@ -50,8 +50,8 @@ root@kali:~# chmod 600 id_rsa.
 
 -> This means the owner - you - gets read/write permissions for it and no one else, enabling its use in SSH when it restricts use of private key due to loose permissions. SSH will deem it secure enough to use after this. 
 
-5. If id_rsa (or any other type of private key) is encrypted itself, crack it with ssh2john like this:
+5. If id_rsa (or any other type of private key) is encrypted itself, crack it with ssh2john. First, convert to john format first to be able to crack it and then crack it:
 
 root@kali:~# ssh2john id_rsa > id_rsa.hash 
-# converting to john format first to be able to crack it
+
 root@kali:~# john id_rsa.hash --wordlist=[Path to Wordlist]
