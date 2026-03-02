@@ -11,6 +11,7 @@ description: Some initial attacks that can be performed on Active Directory
 * This stands for Link Local Multicast Name Resolution. It's former name was NBT-NS.
 * LLMNR helps to identify hosts when the DNS fails.
 * Its vulnerability comes from the fact that, when responded to correctly, it gives a user's username and a NTLMv2 hash in a MITM attack, which we may be able to crack to gain credentials.
+* Basically, LLMNR Poisoning is when a victim fails to access a resource (e.g., network shares, devices, web servers etc.), the victim sends a broadcast on the network asking if anyone knows about where the share is. The attacker, with Responder, pretends to be the resource and says "Send me the credentials.". The victim machine sends the NTLM hash thinking it will be able to access the resource. Responder intercepts it and this can be cracked. In essence, the response is being "poisoned".
 * WPAD (Web Proxy Auto-Discovery Protocol) automatically tells computers which web proxy to use on a network so Windows devices can discover them automatically. If Windows gets a response when it tries to look for WPAD, it assumes it's legitimate and connects automatically.
 * NTLM relay works by sending proof that the client machine you're impersonating knows the password hash live to the victim machine.&#x20;
 
