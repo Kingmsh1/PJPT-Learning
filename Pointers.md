@@ -60,3 +60,9 @@ root@kali:~# chmod 600 id_rsa.
 root@kali:~# ssh2john id_rsa > id_rsa.hash 
 
 root@kali:~# john id_rsa.hash --wordlist=[Path to Wordlist]
+
+
+## Old Windows Machines:
+
+Old windows machine + SMB available -> use Eternal Blue in MSF to get a shell without any creds. If you get meterpreter shell, run "hashdump" to get creds + "download" & "upload" commands are also available.
+
