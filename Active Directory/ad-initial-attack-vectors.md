@@ -4,12 +4,12 @@ description: Some initial attacks that can be performed on Active Directory
 
 # AD Initial Attack Vectors
 
-## Brute-Forcing Domain Users:
+## Brute-Forcing Domain Credentials:
 
 * This is useful for finding users stored in the DC first.
 * This can help later with different attack vectors.
 
-Method (using Kerbrute):
+Method (using Kerbrute - requires port 88 to be open):
 
 1. Start Kali Linux and enter:
 
@@ -24,6 +24,29 @@ root@kali:~# kerbrute userenum -d [Domain] --dc [DC IP] [Path to Wordlist]
 ```bash
 root@kali:~# kerbrute passwordspray -d [Domain] [Path to list of usernames] [Password] --dc [DC IP] 
 ```
+
+
+
+Method (using CME/NXC - requires port 445/139 to be open for this):
+
+1. Start Kali and enter:
+
+```bash
+root@kali:~# impacket-crackmapexec smb [Domain] -u '[Any User]' -p '[Optional Password Flag]' --rid-brute
+```
+
+-> RID bruting works because every object in the AD domain has a SID (Security Identifier), which has a RID (Relative Identifier) part to uniquely identify the objects in the domain.
+-> RID bruting works by incrementing through every RID and asking the DC who it belongs to. 
+-> You have to specify a user, but no password is required), for the DC to allow this RID bruting. Null sessions are unlikely to work. 
+-> You may replace "crackmapexec" with "netexec". NXC has the same syntax but is the "newer" version of CME. 
+
+2. You may also attempt to check if any users set their username as their password with this command:
+
+```bash
+root@kali:~# crackmapexec smb domain -u users.txt -p users.txt --no-bruteforce --continue-on-success
+```
+-> "--no-bruteforce" flag means test if user1=pass1, user2=pass2 etc. without brute forcing every password combo for every user.
+
 
 ***
 
@@ -237,6 +260,7 @@ root@kali:~# psexec.py administrator@[target ip] -hashes [admin account password
 
 * This is exploiting user accounts in AD that don't have pre-authentication. This allows attackers to extract hashed credentials (+ crack), pretending to be that user.
 * Pre-authentication forces users to first prove their identity before the KDC issues the ASREP response. If pre-auth is disabled, attackers can request ASREP responses without knowing the password.
+* You should aim to try and find all users that are ASREP-Roastable. Pass the usernames you find as a text file to GetNPUsers to do this. 
 * It involves:
 
 1. Requesting a ticket to the KDC (Key Distribution Centre) for an account with pre-auth disabled.
