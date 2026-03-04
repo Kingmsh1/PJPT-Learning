@@ -4,6 +4,28 @@ description: Some initial attacks that can be performed on Active Directory
 
 # AD Initial Attack Vectors
 
+## Brute-Forcing Domain Users:
+
+* This is useful for finding users stored in the DC first.
+* This can help later with different attack vectors.
+
+Method (using Kerbrute):
+
+1. Start Kali Linux and enter:
+
+```bash
+root@kali:~# kerbrute userenum -d [Domain] --dc [DC IP] [Path to Wordlist]
+```
+
+-> "-d" switch: specifies the domain we are targeting.
+
+-> You may also use Kerbrute for things like brute-forcing passwords for a single user, password spraying in Active Directory environment (with Kerberos authentication). Example of a password spray:
+
+```bash
+root@kali:~# kerbrute passwordspray -d [Domain] [Path to list of usernames] [Password] --dc [DC IP] 
+```
+
+
 ## LLMNR Poisoning:
 
 
