@@ -25,6 +25,7 @@ root@kali:~# kerbrute userenum -d [Domain] --dc [DC IP] [Path to Wordlist]
 root@kali:~# kerbrute passwordspray -d [Domain] [Path to list of usernames] [Password] --dc [DC IP] 
 ```
 
+***
 
 ## LLMNR Poisoning:
 
