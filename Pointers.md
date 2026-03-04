@@ -61,6 +61,7 @@ root@kali:~# ssh2john id_rsa > id_rsa.hash
 
 root@kali:~# john id_rsa.hash --wordlist=[Path to Wordlist]
 
+***
 
 ## Old Windows Machines:
 
