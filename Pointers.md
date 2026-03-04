@@ -1,6 +1,8 @@
 # These notes are meant to be a quick-glance reminder. These notes did not deserve a whole section to themselves, as a result.
 
-Hash Cracking General Notes:
+***
+
+## Hash Cracking General Notes:
 
 1. In Kali: you can use:
 root@kali@~# hash-identifier [hash]. 
@@ -19,22 +21,25 @@ root@kali:~# hashcat --help | grep NTLMv2
 
 4. Try not to crack passwords on a VM because this runs off the CPU, not the GPU which is much faster than the CPU at cracking passwords. Do it on your actual machine, not the VM.
 
+***
 
-FFUF General Notes:
+## FFUF General Notes:
 
 root@kali:~# ffuf -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt:FUZZ -u http://10.0.2.152/FUZZ
 
 -> Uses FFUF (fuzz faster u fool) in a placeholder sort-of tool that uses a wordlist and replaces the "FUZZ" part in the -u (meaning target). It checks different input and reports behaviour for you to interpret for your attack.
 
+***
 
-ZIP File Cracking:
+## ZIP File Cracking:
 
 1. Use fcrackzip to crack password-protected ZIP files. 
 
 2. When using fcrackzip, always use the "-u" flag to unzip to verify the correct password. Otherwise, fcrackzip may report false positives. 
 
+***
 
-SSH Logon:
+## SSH Logon:
 
 1. SSH supports authentication via password or key. The private key (id_rsa) is stored locally and it it used by SSH to match to the public key (id_rsa.pub) stored in the server to prove identity. 
 
