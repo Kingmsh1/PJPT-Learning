@@ -71,11 +71,9 @@ root@kali:~# gedit vulnerability.txt
 >
 > Description: Used for finding available directories for a website whilst enumerating HTTP and HTTPS
 
-{% code title="Start up Dirbuster GUI" %}
 ```bash
 root@kali:~# dirbuster&
 ```
-{% endcode %}
 
 What the interface looks like:
 
@@ -89,3 +87,21 @@ What the interface looks like:
 
 -> It's also going to try and search for specific file extensions, which you can edit in the interface. Add more extensions, if you want, like this "php, txt, rar, zip" etc. separated by commas. The longer you make it, the longer the search will be.&#x20;
 
+***
+
+## Directory Busting (with Gobuster - preferred method):
+
+> Tool: Gobuster
+>
+> Description: Used for finding available directories for a website whilst enumerating HTTP and HTTPS.
+> Used from CLI and thus may be faster and more convenient.
+
+Method:
+
+1. Start Kali and run:
+
+```bash
+root@kali:~# gobuster dir -u [URL] -w [Path to Wordlist] -q
+```
+
+-> Finds directories and reduces noise (i.e., error messages) and results in clean, "quiet" output with the "-q" flag.
