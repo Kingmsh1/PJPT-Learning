@@ -61,7 +61,7 @@ root@kali:~# neo4j console
 
 {% code title="Starting Bloodhound." %}
 ```shellscript
-root@kali:~# bloodhound
+root@kali:~# bloodhound --no-sandbox
 ```
 {% endcode %}
 
