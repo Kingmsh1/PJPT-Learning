@@ -27,7 +27,7 @@ root@kali:~# kerbrute passwordspray -d [Domain] [Path to list of usernames] [Pas
 
 
 
-Method (using CME/NXC - requires port 445/139 to be open for this):
+Method (using CME/NXC RID Bruting - requires port 445/139 to be open for this):
 
 1. Start Kali and enter:
 
@@ -47,6 +47,13 @@ root@kali:~# crackmapexec smb domain -u users.txt -p users.txt --no-bruteforce -
 ```
 -> "--no-bruteforce" flag means test if user1=pass1, user2=pass2 etc. without brute forcing every password combo for every user.
 
+Method (using CME/NXC - requires port 445/139 to be open for this):
+
+1. Start Kali and enter:
+
+```bash
+root@kali:~# crackmapexec smb [Target IP] --users
+```
 
 ***
 
