@@ -21,6 +21,8 @@ root@kali:~# hashcat --help | grep NTLMv2
 
 4. Try not to crack passwords on a VM because this runs off the CPU, not the GPU which is much faster than the CPU at cracking passwords. Do it on your actual machine, not the VM.
 
+### DON'T FORGET ABOUT ENCODINGS! USE CYBERCHEF TO ALSO TEST POTENTIAL HASHES/ENCODED PLAINTEXT!!!!
+
 ***
 
 ## FFUF General Notes:
