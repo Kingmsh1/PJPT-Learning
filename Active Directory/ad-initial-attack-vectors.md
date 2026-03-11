@@ -26,6 +26,11 @@ root@kali:~# kerbrute passwordspray -d [Domain] [Path to list of usernames] [Pas
 ```
 
 
+2. Crack one of those users' passwords with Kerbrute like this:
+
+```bash
+root@kali:~# kerbrute bruteuser -d [Domain] --dc [DC IP] [Path to Wordlist] [Admin]
+```
 
 Method (using CME/NXC RID Bruting - requires port 445/139 to be open for this):
 
