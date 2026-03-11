@@ -99,14 +99,14 @@ Ensure Bloodhound (and Neo4J) is still running to be able to use Plumhound.&#x20
 
 Method:
 
-1. Make sure you are in the directory with the PlumHound.py executable.
-2. Analyse the information from Bloodhound through this command:
+1. Make sure you are in the directory with the PlumHound.py executable after doing this:
 
-{% code title="Ensuring connection can be established with the Bloodhound database." %}
 ```bash
-root@kali:~# python3 PlumHound.py --easy -p [Neo4J Password]
+root@kali:~# git clone https://github.com/PlumHound/PlumHound.git
+root@kali:~# cd PlumHound
+root@kali:~# pip3 install -r requirements.txt --break-system-packages
+
 ```
-{% endcode %}
 
 2. Run a set of predefined analysis tasks with this command:
 
