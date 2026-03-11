@@ -31,6 +31,8 @@ root@kali:~# ldapdomaindump ldaps://[DC Controller IP] -u '[Domain]\[Username]' 
 ```
 {% endcode %}
 
+-> Use "ldap" instead of "ldaps" if it doesn't work - LDAPS requires port 636, not 389 like LDAP.
+
 3. You can see the information on the domain admins, expired/non-expired accounts, account creation times etc. Look at the files on domain users, policies and computers in particular.&#x20;
 
 ***
