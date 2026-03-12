@@ -63,7 +63,7 @@ This tells us information about what kind of passwords the client's user account
 
 ***
 
-## Golden Ticket Attacks:
+## Golden Ticket Attack:
 
 * When we compromise a specific account - krbtgt - we will own the domain. This is the Kerberos Ticket Granting Ticket - allows us to generate tickets.&#x20;
 * This means we can use this to request access to any resource or system on the domain, using the ticket granting service through forging a TGT - this will be our Golden Ticket.&#x20;
@@ -72,9 +72,9 @@ This tells us information about what kind of passwords the client's user account
 
 
 
-Method:
+Method (with Mimikatz):
 
-1. We will use Mimikatz. Drop into Mimikatz like this from attacker machine:
+1. Drop into Mimikatz like this from attacker machine:
 
 ```shellscript
 root@kali:~# crackmapexec smb <target_ip> -u <username> -p <password> -M mimikatz
