@@ -2,6 +2,10 @@
 
 ***
 
+## For quick reference of specific tasks to perform at specific stages of a pentest, check out wadcoms.github.io. It's goated.
+
+***
+
 ## Hash Cracking General Notes:
 
 1. In Kali: you can use:
@@ -68,4 +72,5 @@ root@kali:~# john id_rsa.hash --wordlist=[Path to Wordlist]
 ## Old Windows Machines:
 
 Old windows machine + SMB available -> use Eternal Blue in MSF to get a shell without any creds. If you get meterpreter shell, run "hashdump" to get creds + "download" & "upload" commands are also available.
+
 
