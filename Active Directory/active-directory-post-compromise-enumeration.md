@@ -117,3 +117,19 @@ root@kali:~# python3 PlumHound.py -x tasks/default.tasks -p [Neo4J Password]
 {% endcode %}
 
 3. Go to the folder where the reports are stored. Open a file called 'index.html'. You'll have the analysis done by PlumHound without having to go through individual data files. Information includes OS, last login, sensitivity of accounts etc.
+
+***
+
+## Identifying Password Policy (for brute-force):
+
+* This method is useful for evaluating the password policy of a client.
+* It can also inform an attacker of the type of passwords to try and skip those that don't match the policy.
+
+Method:
+
+1. Obtain credentials and run this command:
+
+```bash
+root@kali:~# crackmapexec smb [Any Domain Machine IP] -u [Username] -p [Password] --pass-pol
+```
+
