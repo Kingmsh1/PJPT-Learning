@@ -51,7 +51,7 @@ root@kali:~# crackmapexec smb [Network IP]/[CIDR Notation for Subnet] -u adminis
 
 -> "-H": signals the user of a hash. We need NTLMv1 here.&#x20;
 
--> "--local-auth": used to log in to those machines locally against their SAM database, not the domain. This will only work if there is a local administrator account with the same password hash on multiple machines.&#x20;
+-> "--local-auth": used to log in to those machines locally against their SAM database, not the domain. This will only work if there is a local administrator account with the same password hash on multiple machines. Without this, CME sends the creds to the DC for domain authentication (but the DC doesn't know about local accounts on a specific machine) meaning it will fail. That's why it's against the local SAM database where the creds can actually be found. &#x20;
 
 -> "--sam": Dumps SAM hashes for other users upon authenticating.
 
