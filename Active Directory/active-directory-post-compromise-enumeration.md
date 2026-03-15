@@ -18,6 +18,9 @@ This can help you to see:
 Look at the files on domain users, policies and computers in particular.&#x20;
 {% endhint %}
 
+- LDAP stands for Lightweight Directory Access Protocol - service that runs on the DC.
+- It's a service on the DC.
+- It stores AD information and is used to find accounts, SPNs etc.
 
 
 Method:
