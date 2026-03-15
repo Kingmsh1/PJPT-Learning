@@ -254,13 +254,14 @@ Mitigating Against Pass Attacks:
 
 ## Kerberoasting:
 
-* Quick way to get domain admin/service account privileges in a network using a compromised valid domain login. You don't need a privileged user's credentials for this. 
+* Quick way to get domain admin/service account privileges in a network using a compromised valid domain login. You don't need a privileged user's credentials for this.
+* When you run GetUserSPNs, it queries LDAP for all accounts with SPNs which are listed on the console.
 * A quick summary of the steps:
 
-1. Request a TGT (Ticket Granting Ticket) from the Domain Controller (our Key Distribution Centre - KDC) by providing an NTLM hash. Any user on the domain can request this, so use any compromised credentials.
+1. Request a TGT (Ticket Granting Ticket) from the Key Distribution Centre service on the DC by providing an NTLM hash. Any user on the domain can request this, so use any compromised credentials.
 2. Receive a TGT back that's encoded with a Kerberos TGT hash.
-3. Request TGS tickets for SPN accounts, by presenting our TGT.
-4. Receive a TGS back encoded with the server's account hash. This is the only step that is visible to the attacker on the console.&#x20;
+3. Request TGS tickets (service tickets) for SPN accounts, by presenting our TGT. For every SPN, the DC issues encrypted service tickets (output to the sonsole).
+4. Receive TGS back encoded with the service account(s') password(s). This is the only step that is visible to the attacker on the console.&#x20;
 5. Crack the TGS tickets.
 
 
